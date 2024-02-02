@@ -53,7 +53,7 @@ const postLogin = async (req, res, next) => {
     }
     const isMatch = bcrypt.compareSync(password, existUser.password);
     if (!isMatch) {
-      res.status(401).json({
+      res.status(202).json({
         success: false,
         message: "Invelid password",
       });

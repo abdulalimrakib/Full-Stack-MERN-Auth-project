@@ -1,13 +1,15 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import exios from "axios";
+import { useSelector, useDispatch } from 'react-redux'
+import { signInStart, signInSuccessful, signInFailure } from '../redux/userSlice'
 
 const Login = () => {
     const [formData, setFromData] = useState({});
-    const [isError, setIsError] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const { isLoading, isError } = useSelector((state) => state.user)
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const handleChange = (e) => {
         setFromData({ ...formData, [e.target.name]: e.target.value });
@@ -16,23 +18,21 @@ const Login = () => {
     const postData = async (e) => {
         try {
             e.preventDefault();
-            setIsError(false);
-            setIsLoading(true);
-            await exios
+            dispatch(signInStart())
+            await axios
                 .post("http://localhost:4000/api/auth/login", formData)
-                .then((res) => {
-                    setIsLoading(false);
+                .then(async (res) => {
                     if (!res?.data?.success) {
-                        setIsError(true);
-                    } else
+                        dispatch(signInFailure(res.data))
+                    } else {
+                        dispatch(signInSuccessful(res.data))
                         navigate("/")
+                    }
                 })
-                .catch((err) => {
-                    console.log(err.message, "from Signup page");
-                    setIsLoading(false);
-                    setIsError(true);
-                });
-        } catch (error) { }
+        } catch (error) {
+            console.log(error.message, "from Signup page");
+            dispatch(signInFailure(error))
+        }
     };
 
     return (
@@ -68,7 +68,7 @@ const Login = () => {
                 </Link>
             </div>
             <p className="text-red-600 text-[14px] mt-2 font-serif">
-                {isError ? "something wrong !!" : ""}
+                {isError ? isError.message || "something wrong !!" : ""}
             </p>
         </div>
     );

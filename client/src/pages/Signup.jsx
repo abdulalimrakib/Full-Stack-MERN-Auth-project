@@ -27,12 +27,12 @@ const Signup = () => {
                     } else
                         navigate("/login")
                 })
-                .catch((err) => {
-                    console.log(err.message, "from Signup page");
-                    setIsLoading(false);
-                    setIsError(true);
-                });
-        } catch (error) { }
+
+        } catch (error) {
+            console.log(error.message, "from Signup page");
+            setIsLoading(false);
+            setIsError(true);
+        }
     };
 
     return (
