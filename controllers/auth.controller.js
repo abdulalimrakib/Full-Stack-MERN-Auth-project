@@ -1,4 +1,11 @@
+require("dotenv").config();
+
+const jwt = require("jsonwebtoken");
+
 const User = require("../models/user.model");
+
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 const postSignup = async (req, res, next) => {
   try {
@@ -7,26 +14,61 @@ const postSignup = async (req, res, next) => {
 
     if (existUser) {
       return res.status(202).json({
-        success:false,
+        success: false,
         message: "User already exists!",
       });
     } else {
-      const newUser = new User({ username, email, password });
-      await newUser
-        .save()
-        .then(() => {
-          res.status(201).json({
-            success: true,
-            message: "User created successfully",
+      bcrypt.hash(password, saltRounds, async (err, hash) => {
+        const newUser = new User({ username, email, password: hash });
+        await newUser
+          .save()
+          .then(() => {
+            res.status(201).json({
+              success: true,
+              message: "User created successfully",
+            });
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message: "Can't create user",
+              error: err.message,
+            });
           });
-        })
-        .catch((err) => {
-          res.status(500).send({
-            message: "Can't create user",
-            error: err.message,
-          });
-        });
+      });
     }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const postLogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const existUser = await User.findOne({ email });
+    if (!existUser) {
+      return res.status(202).json({
+        success: false,
+        message: "Invelid email",
+      });
+    }
+    const isMatch = bcrypt.compareSync(password, existUser.password);
+    if (!isMatch) {
+      res.status(401).json({
+        success: false,
+        message: "Invelid password",
+      });
+    }
+    const token = jwt.sign({ id: existUser._id }, process.env.SECRET_KEY, {
+      expiresIn: "2 days",
+    });
+    const { password: hashPassword, ...restData } = existUser._doc;
+    res
+      .cookie("Bearer " + token)
+      .status(200)
+      .json({
+        success: true,
+        userData: restData,
+      });
   } catch (error) {
     next(error);
   }
@@ -34,4 +76,5 @@ const postSignup = async (req, res, next) => {
 
 module.exports = {
   postSignup,
+  postLogin,
 };

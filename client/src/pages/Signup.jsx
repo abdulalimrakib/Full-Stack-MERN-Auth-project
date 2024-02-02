@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import exios from "axios";
 
 const Signup = () => {
     const [formData, setFromData] = useState({});
     const [isError, setIsError] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setFromData({ ...formData, [e.target.name]: e.target.value });
@@ -20,9 +22,10 @@ const Signup = () => {
                 .post("http://localhost:4000/api/auth/signup", formData)
                 .then((res) => {
                     setIsLoading(false);
-                    if(!res?.data?.success){
+                    if (!res?.data?.success) {
                         setIsError(true);
-                    }
+                    } else
+                        navigate("/login")
                 })
                 .catch((err) => {
                     console.log(err.message, "from Signup page");
