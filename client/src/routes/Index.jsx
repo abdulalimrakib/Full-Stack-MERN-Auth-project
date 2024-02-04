@@ -5,6 +5,7 @@ import Login from "../pages/Login"
 import Signup from "../pages/Signup"
 import Profile from './../pages/Profile';
 import Navbar from './../layouts/Navbar';
+import PrivetRoute from "../components/PrivetRoute"
 // import Footer from './../layouts/Footer';
 
 const Index = () => {
@@ -16,7 +17,9 @@ const Index = () => {
                 <Route path="/about" element={<About />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route element={<PrivetRoute />}>
+                    <Route path="/profile" element={<Profile />} />
+                </Route>
             </Routes>
             {/* <Footer /> */}
         </BrowserRouter>

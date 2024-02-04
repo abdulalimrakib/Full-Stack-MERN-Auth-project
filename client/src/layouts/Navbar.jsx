@@ -4,12 +4,14 @@ import { MdClose } from "react-icons/md";
 import { motion } from "framer-motion"
 import { fadeIn } from "../variants";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 
 
 
 const Navbar = () => {
     const [isMenuCliked, setIsMenuCliked] = useState(false)
+    const { userData } = useSelector(state => state.user)
 
     return (
         <div className="bg-[#E3E8F1]">
@@ -20,7 +22,13 @@ const Navbar = () => {
                 <ul className="hidden md:flex gap-8">
                     <li><Link to="/" className="font-medium" href="">Home</Link></li>
                     <li><Link to="/about" className="font-medium" href="">About</Link></li>
-                    <li><Link to="/login" className="font-medium" href="">Login</Link></li>
+                    {
+                        userData ? (
+                            <Link to="/profile"><img src={userData?.data?.userData?.image} className="w-7 h-7 rounded-full object-cover" alt="" /></Link>
+                        ) : (
+                            <li><Link to="/login" className="font-medium" href="">Login</Link></li>
+                        )
+                    }
                     {/* <li><a href="">logo1</a></li>
                     <li><a href="">logo2</a></li> */}
                 </ul>
