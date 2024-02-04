@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import exios from "axios";
+import FirebaseOth from "../components/FirebaseOth";
 
 const Signup = () => {
     const [formData, setFromData] = useState({});
@@ -67,6 +68,7 @@ const Signup = () => {
                 >
                     {isLoading ? "Loading ..." : "sign up"}
                 </button>
+                <FirebaseOth />
             </form>
             <div className="text-[18px] mt-3 flex gap-2">
                 <p>Have a account?</p>

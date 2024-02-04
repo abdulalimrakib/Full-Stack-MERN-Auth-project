@@ -74,7 +74,51 @@ const postLogin = async (req, res, next) => {
   }
 };
 
+const postDataFromGoogle = async (req, res, next) => {
+  try {
+    const { username, email, image } = req.body;
+    const existUser = await User.findOne({ email });
+    console.log(existUser);
+
+    if (existUser) {
+      const token = jwt.sign({ id: existUser._id }, process.env.SECRET_KEY, {
+        expiresIn: "2 days",
+      });
+      const { password: hashPassword, ...restData } = existUser._doc;
+      res
+        .cookie("Bearer " + token)
+        .status(200)
+        .json({
+          success: true,
+          userData: restData,
+        });
+    } else {
+      const generetedPassword = Math.random().toString(36).slice(-8);
+
+      bcrypt.hash(generetedPassword, saltRounds, async (err, hash) => {
+        const newUser = new User({ username, email, password: hash, image });
+        await newUser.save();
+
+        const token = jwt.sign({ id: existUser._id }, process.env.SECRET_KEY, {
+          expiresIn: "2 days",
+        });
+        const { password: hashPassword, ...restData } = existUser._doc;
+        res
+          .cookie("Bearer " + token)
+          .status(200)
+          .json({
+            success: true,
+            userData: restData,
+          });
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   postSignup,
   postLogin,
+  postDataFromGoogle,
 };

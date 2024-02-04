@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux'
 import { signInStart, signInSuccessful, signInFailure } from '../redux/userSlice'
+import FirebaseOth from '../components/FirebaseOth'
 
 const Login = () => {
     const [formData, setFromData] = useState({});
@@ -60,6 +61,7 @@ const Login = () => {
                 >
                     {isLoading ? "Loading ..." : "Log in"}
                 </button>
+                <FirebaseOth />
             </form>
             <div className="text-[18px] mt-3 flex gap-2">
                 <p>Do not have an account?</p>
