@@ -12,12 +12,12 @@ const Profile = () => {
     const { userData } = useSelector((state) => state.user);
     const [username, setUsername] = useState(userData?.data?.userData?.username);
     const [email, setEmail] = useState(userData?.data?.userData?.email);
+    // const [username, setUsername] = useState(userData?.data?.userData?.username)
     const [image, setImage] = useState();
     const [imageFile, setImageFile] = useState();
 
     const [imagePercentage, setImagePercentage] = useState(0);
     const [imageError, setImageError] = useState(false);
-    // const [username, setUsername] = useState(userData?.data?.userData?.username)
     const imgRef = useRef(null);
 
     useEffect(() => {
@@ -25,7 +25,6 @@ const Profile = () => {
     }, [imageFile]);
 
     const handaleUploadImage = async (imageFile) => {
-        console.log(imageFile);
         const storageLocation = getStorage(app);
         const fileName = new Date().getDate() + imageFile.name;
         const storageRef = ref(storageLocation, fileName);

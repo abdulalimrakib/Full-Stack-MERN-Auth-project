@@ -63,7 +63,7 @@ const postLogin = async (req, res, next) => {
     });
     const { password: hashPassword, ...restData } = existUser._doc;
     res
-      .cookie("Bearer " + token)
+      .cookie('access_token', token)
       .status(200)
       .json({
         success: true,
@@ -86,7 +86,9 @@ const postDataFromGoogle = async (req, res, next) => {
       });
       const { password: hashPassword, ...restData } = existUser._doc;
       res
-        .cookie("Bearer " + token)
+        .cookie('access_token', token ,{
+          HttpOnly: true
+        })
         .status(200)
         .json({
           success: true,
@@ -104,7 +106,9 @@ const postDataFromGoogle = async (req, res, next) => {
         });
         const { password: hashPassword, ...restData } = existUser._doc;
         res
-          .cookie("Bearer " + token)
+          .cookie('access_token', token, {
+            HttpOnly: true
+          })
           .status(200)
           .json({
             success: true,

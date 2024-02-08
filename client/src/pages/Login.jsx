@@ -24,9 +24,9 @@ const Login = () => {
                 .post("http://localhost:4000/api/auth/login", formData)
                 .then(async (res) => {
                     if (!res?.data?.success) {
-                        dispatch(signInFailure(res.data))
+                        dispatch(signInFailure(res))
                     } else {
-                        dispatch(signInSuccessful(res.data))
+                        dispatch(signInSuccessful(res))
                         navigate("/")
                     }
                 })
