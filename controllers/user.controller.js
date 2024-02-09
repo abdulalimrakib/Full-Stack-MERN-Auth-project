@@ -5,7 +5,7 @@ const updateUser = async (req, res, next) => {
   try {
     console.log(req.body);
     if (req.user.id !== req.params.id)
-      return res.status(397).json("Login your account");
+      return res.status(397).json("Login your account first");
     if (req.body.password) {
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }

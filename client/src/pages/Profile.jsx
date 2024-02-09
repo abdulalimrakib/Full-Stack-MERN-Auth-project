@@ -12,10 +12,8 @@ import { updateFailure, updateStart, updateSuccessful } from "../redux/userSlice
 
 const Profile = () => {
     const { userData } = useSelector((state) => state.user);
-    const [username, setUsername] = useState(userData?.data?.userData?.username);
-    const [email, setEmail] = useState(userData?.data?.userData?.email);
-    const [password, setPassword] = useState()
-    const [image, setImage] = useState();
+    const [formData, setFromData] = useState({});
+    console.log(formData.image);
     const [imageFile, setImageFile] = useState();
 
     const [imagePercentage, setImagePercentage] = useState(0);
@@ -24,11 +22,13 @@ const Profile = () => {
 
     const dispatch = useDispatch()
 
+    const handleChange = (e) => {
+        setFromData({ ...formData, [e.target.name]: e.target.value })
+    }
+
     useEffect(() => {
         if (imageFile) handaleUploadImage(imageFile);
     }, [imageFile]);
-    const BearerToken = localStorage.getItem("token")
-    const token = BearerToken.slice(7);
 
     const handaleUploadImage = async (imageFile) => {
         const storageLocation = getStorage(app);
@@ -47,41 +47,11 @@ const Profile = () => {
             },
             () => {
                 getDownloadURL(uploadImage.snapshot.ref).then((downloadUrl) => {
-                    setImage(downloadUrl);
+                    setFromData({ ...formData, image: downloadUrl })
                 });
             }
         );
     };
-
-
-    // const handlePostData = async (e) => {
-    //     try {
-    //         e.preventDefault()
-    //         dispatch(updateStart())
-    //         await axios.post(`http://localhost:4000/api/user/update/${userData?.data?.userData?._id}`,
-    //             {
-    //                 headers: {
-    //                     'header': token
-    //                 }
-    //             },
-    //             {
-    //                 username,
-    //                 email,
-    //                 password,
-    //                 image
-    //             },).then(async (res) => {
-    //                 if (!res?.data?.success) {
-    //                     dispatch(updateFailure(res))
-    //                 } else {
-    //                     dispatch(updateSuccessful(res))
-    //                     navigate("/")
-    //                 }
-    //             })
-    //     } catch (error) {
-    //         console.log(error.message, "from update page");
-    //         dispatch(updateFailure(error))
-    //     }
-    // }
 
 
     const handlePostData = async (e) => {
@@ -89,7 +59,7 @@ const Profile = () => {
             e.preventDefault();
             dispatch(updateStart());
 
-            const response = await axios.post(
+            await axios.post(
                 `http://localhost:4000/api/user/update/${userData?.data?.userData?._id}`,
                 {
                     username,
@@ -97,26 +67,19 @@ const Profile = () => {
                     password,
                     image
                 },
-                {
-                    headers: {
-                        'header': `Bearer ${token}` // Corrected headers syntax
-                    }
+            ).then(res => {
+                if (!res?.data?.success) {
+                    dispatch(updateFailure(res));
+                } else {
+                    dispatch(updateSuccessful(res));
                 }
-            );
-            console.log(response);
+            })
 
-            if (!response?.data?.success) {
-                dispatch(updateFailure(response));
-            } else {
-                dispatch(updateSuccessful(response));
-            }
         } catch (error) {
             console.log(error.message, "from update page");
             dispatch(updateFailure(error));
         }
     };
-
-    // console.log(userData?.data?.userData?._id);
 
     return (
         <div className="mt-10 p-3 max-w-lg mx-auto flex flex-col gap-8">
@@ -132,7 +95,7 @@ const Profile = () => {
                     onChange={(e) => setImageFile(e.target.files[0])}
                 />
                 <img
-                    src={image || userData?.data?.userData?.image}
+                    src={formData.image || userData?.data?.userData?.image}
                     className=" rounded-full w-28 h-28 object-cover self-center cursor-pointer"
                     alt="image"
                     onClick={() => imgRef.current.click()}
@@ -155,22 +118,22 @@ const Profile = () => {
                     placeholder="User Name"
                     className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
                     name="username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    defaultValue={userData?.data?.userData?.username}
+                    onChange={handleChange}
                 />
                 <input
                     type="email"
                     placeholder="Email"
                     className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
                     name="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    defaultValue={userData?.data?.userData?.email}
+                    onChange={handleChange}
                 />
                 <input
                     type="password"
                     placeholder="Password"
                     className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={handleChange}
                 />
                 <button className="uppercase border p-3 text-black text-[18px] w-full rounded-lg bg-teal-600 hover:bg-opacity-80 font-semibold">
                     Update
