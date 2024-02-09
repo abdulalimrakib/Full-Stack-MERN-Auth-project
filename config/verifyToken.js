@@ -2,13 +2,14 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const verifyToken = (req, res, next) => {
-  const token = req.headers.header;
+  const token = req.headers.authorization.split(' ')[1];
+  console.log(token);
   // const token = req.cookies.access_token;
   // console.log(token);
   if (!token) return res.status(401).json("You are not authenticated!");
 
   jwt.verify(token, "helloworld", (err, user) => {
-    // console.log(err);
+    console.log(err);
     // console.log(user);
     if (err) return res.status(403).json("Token is not valid!");
 

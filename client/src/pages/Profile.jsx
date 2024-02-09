@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
     getDownloadURL,
     getStorage,
@@ -7,12 +7,14 @@ import {
     uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../fireBaseConfig";
+import axios from "axios";
+import { updateFailure, updateStart, updateSuccessful } from "../redux/userSlice";
 
 const Profile = () => {
     const { userData } = useSelector((state) => state.user);
     const [username, setUsername] = useState(userData?.data?.userData?.username);
     const [email, setEmail] = useState(userData?.data?.userData?.email);
-    // const [username, setUsername] = useState(userData?.data?.userData?.username)
+    const [password, setPassword] = useState()
     const [image, setImage] = useState();
     const [imageFile, setImageFile] = useState();
 
@@ -20,9 +22,13 @@ const Profile = () => {
     const [imageError, setImageError] = useState(false);
     const imgRef = useRef(null);
 
+    const dispatch = useDispatch()
+
     useEffect(() => {
         if (imageFile) handaleUploadImage(imageFile);
     }, [imageFile]);
+    const BearerToken = localStorage.getItem("token")
+    const token = BearerToken.slice(7);
 
     const handaleUploadImage = async (imageFile) => {
         const storageLocation = getStorage(app);
@@ -47,12 +53,77 @@ const Profile = () => {
         );
     };
 
+
+    // const handlePostData = async (e) => {
+    //     try {
+    //         e.preventDefault()
+    //         dispatch(updateStart())
+    //         await axios.post(`http://localhost:4000/api/user/update/${userData?.data?.userData?._id}`,
+    //             {
+    //                 headers: {
+    //                     'header': token
+    //                 }
+    //             },
+    //             {
+    //                 username,
+    //                 email,
+    //                 password,
+    //                 image
+    //             },).then(async (res) => {
+    //                 if (!res?.data?.success) {
+    //                     dispatch(updateFailure(res))
+    //                 } else {
+    //                     dispatch(updateSuccessful(res))
+    //                     navigate("/")
+    //                 }
+    //             })
+    //     } catch (error) {
+    //         console.log(error.message, "from update page");
+    //         dispatch(updateFailure(error))
+    //     }
+    // }
+
+
+    const handlePostData = async (e) => {
+        try {
+            e.preventDefault();
+            dispatch(updateStart());
+
+            const response = await axios.post(
+                `http://localhost:4000/api/user/update/${userData?.data?.userData?._id}`,
+                {
+                    username,
+                    email,
+                    password,
+                    image
+                },
+                {
+                    headers: {
+                        'header': `Bearer ${token}` // Corrected headers syntax
+                    }
+                }
+            );
+            console.log(response);
+
+            if (!response?.data?.success) {
+                dispatch(updateFailure(response));
+            } else {
+                dispatch(updateSuccessful(response));
+            }
+        } catch (error) {
+            console.log(error.message, "from update page");
+            dispatch(updateFailure(error));
+        }
+    };
+
+    // console.log(userData?.data?.userData?._id);
+
     return (
         <div className="mt-10 p-3 max-w-lg mx-auto flex flex-col gap-8">
             <h2 className="text-3xl md:text-4xl font-semibold text-center">
                 Profile
             </h2>
-            <form action="" className="flex flex-col gap-4 mt-3">
+            <form action="" className="flex flex-col gap-4 mt-3" onSubmit={handlePostData}>
                 <input
                     type="file"
                     ref={imgRef}
@@ -99,7 +170,7 @@ const Profile = () => {
                     type="password"
                     placeholder="Password"
                     className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
-                // onChange={handleChange}
+                    onChange={(e) => setPassword(e.target.value)}
                 />
                 <button className="uppercase border p-3 text-black text-[18px] w-full rounded-lg bg-teal-600 hover:bg-opacity-80 font-semibold">
                     Update

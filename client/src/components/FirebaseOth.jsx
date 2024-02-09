@@ -20,7 +20,7 @@ const FirebaseOth = () => {
                 username: result.user.displayName,
                 email: result.user.email,
                 image: result.user.photoURL,
-            }).then((res) => {
+            }, {withCredentials: true}).then((res) => {
                 dispatch(signInSuccessful(res))
             })
         } catch (error) {
