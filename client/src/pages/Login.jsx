@@ -37,21 +37,21 @@ const Login = () => {
     };
 
     return (
-        <div className="mt-10 p-3 max-w-lg mx-auto">
-            <h1 className="text-3xl font-medium text-center">Log In</h1>
-            <form className="flex flex-col gap-2 mt-3" onSubmit={postData}>
+        <div className="mt-10 p-8 max-w-lg mx-auto border-2 rounded-xl">
+            <h1 className="text-3xl font-medium text-center">Login</h1>
+            <form className="flex flex-col gap-2 mt-8" onSubmit={postData}>
                 <input
                     type="email"
                     name="email"
                     placeholder="Email"
-                    className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
+                    className="p-3 text-black text-[18px] w-full rounded-lg border border-teal-400 focus:outline-none focus:ring-2"
                     onChange={handleChange}
                 />
                 <input
                     type="password"
                     name="password"
                     placeholder="Password"
-                    className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
+                    className="p-3 text-black text-[18px] w-full rounded-lg border border-emerald-400 focus:outline-none focus:ring-2"
                     onChange={handleChange}
                 />
                 <button

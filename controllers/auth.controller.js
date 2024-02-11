@@ -62,13 +62,10 @@ const postLogin = async (req, res, next) => {
       expiresIn: "2 days",
     });
     const { password: hashPassword, ...restData } = existUser._doc;
-    res
-      .cookie('access_token', token)
-      .status(200)
-      .json({
-        success: true,
-        userData: restData,
-      });
+    res.cookie("access_token", token).status(200).json({
+      success: true,
+      userData: restData,
+    });
   } catch (error) {
     next(error);
   }
@@ -86,8 +83,8 @@ const postDataFromGoogle = async (req, res, next) => {
       });
       const { password: hashPassword, ...restData } = existUser._doc;
       res
-        .cookie('access_token', token ,{
-          HttpOnly: true
+        .cookie("access_token", token, {
+          HttpOnly: true,
         })
         .status(200)
         .json({
@@ -106,8 +103,8 @@ const postDataFromGoogle = async (req, res, next) => {
         });
         const { password: hashPassword, ...restData } = existUser._doc;
         res
-          .cookie('access_token', token, {
-            HttpOnly: true
+          .cookie("access_token", token, {
+            HttpOnly: true,
           })
           .status(200)
           .json({
@@ -121,8 +118,17 @@ const postDataFromGoogle = async (req, res, next) => {
   }
 };
 
+const signOutAccount = async (req, res, next) => {
+  try {
+    res.clearCookie("access_token").json("Successfully Sing-out !!");
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   postSignup,
   postLogin,
   postDataFromGoogle,
+  signOutAccount,
 };

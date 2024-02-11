@@ -3,9 +3,6 @@ const User = require("../models/user.model");
 
 const updateUser = async (req, res, next) => {
   try {
-    // console.log(req.body);
-    console.log(req.user.id);
-    console.log(req?.params);
     if (req.user.id !== req.params.id)
       return res.status(390).json("Login your account first");
     if (req.body.password) {
@@ -32,6 +29,18 @@ const updateUser = async (req, res, next) => {
   }
 };
 
+const deleteUser = async (req, res, next) => {
+  try {
+    if (req.user.id !== req.params.id)
+      return res.status(390).json("Login your account first");
+    await User.findByIdAndDelete(req.params.id);
+    res.status(200).json("User has been Deleted !!!");
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   updateUser,
+  deleteUser,
 };

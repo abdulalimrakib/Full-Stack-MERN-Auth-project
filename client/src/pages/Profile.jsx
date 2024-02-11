@@ -9,9 +9,13 @@ import {
 import { app } from "../fireBaseConfig";
 import axios from "axios";
 import {
-    updateFailure,
     updateStart,
     updateSuccessful,
+    updateFailure,
+    deleteStart,
+    deleteSuccessful,
+    deleteFailure,
+    userSignOut,
 } from "../redux/userSlice";
 
 const Profile = () => {
@@ -64,7 +68,8 @@ const Profile = () => {
 
             await axios
                 .post(
-                    `http://localhost:4000/api/user/update/${userData?.data?.userData?._id || userData?.data?._id}`,
+                    `http://localhost:4000/api/user/update/${userData?.data?.userData?._id || userData?.data?._id
+                    }`,
                     formData,
                     {
                         withCredentials: true,
@@ -76,7 +81,7 @@ const Profile = () => {
                         return dispatch(updateFailure(res));
                     } else {
                         dispatch(updateSuccessful(res));
-                        setIsUpdated(true)
+                        setIsUpdated(true);
                     }
                 });
         } catch (error) {
@@ -85,6 +90,27 @@ const Profile = () => {
         }
     };
 
+    const handleDeleteAccount = async () => {
+        try {
+            await axios
+                .delete(
+                    `http://localhost:4000/api/user/delete/${userData?.data?.userData?._id || userData?.data?._id
+                    }`,
+                    { withCredentials: true }
+                )
+                .then((res) => dispatch(deleteSuccessful(res)));
+        } catch (error) {
+            dispatch(deleteFailure(error));
+        }
+    };
+
+    const handleSignOut = async () => {
+        try {
+            await axios
+                .get("http://localhost:4000/api/auth/sign-out", {withCredentials: true})
+                .then((res) => dispatch(userSignOut(res)));
+        } catch (error) { }
+    };
     return (
         <div className="mt-10 p-3 max-w-lg mx-auto flex flex-col gap-4">
             <h2 className="text-3xl md:text-4xl font-semibold text-center">
@@ -103,7 +129,11 @@ const Profile = () => {
                     onChange={(e) => setImageFile(e.target.files[0])}
                 />
                 <img
-                    src={formData.image || userData?.data?.userData?.image || userData?.data?.image}
+                    src={
+                        formData.image ||
+                        userData?.data?.userData?.image ||
+                        userData?.data?.image
+                    }
                     className=" rounded-full w-28 h-28 object-cover self-center cursor-pointer"
                     alt="image"
                     onClick={() => imgRef.current.click()}
@@ -126,7 +156,9 @@ const Profile = () => {
                     placeholder="User Name"
                     className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
                     name="username"
-                    defaultValue={userData?.data?.userData?.username || userData?.data?.username}
+                    defaultValue={
+                        userData?.data?.userData?.username || userData?.data?.username
+                    }
                     onChange={handleChange}
                 />
                 <input
@@ -134,7 +166,9 @@ const Profile = () => {
                     placeholder="Email"
                     className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
                     name="email"
-                    defaultValue={userData?.data?.userData?.email || userData?.data?.email}
+                    defaultValue={
+                        userData?.data?.userData?.email || userData?.data?.email
+                    }
                     onChange={handleChange}
                 />
                 <input
@@ -149,8 +183,18 @@ const Profile = () => {
                 </button>
             </form>
             <div className="text-red-700 flex justify-between items-center">
-                <span className="cursor-pointer hover:opacity-85">Delete Account</span>
-                <span className="cursor-pointer hover:opacity-85">Sign Out</span>
+                <span
+                    className="cursor-pointer hover:opacity-85"
+                    onClick={handleDeleteAccount}
+                >
+                    Delete Account
+                </span>
+                <span
+                    className="cursor-pointer hover:opacity-85"
+                    onClick={handleSignOut}
+                >
+                    Sign Out
+                </span>
             </div>
             <p className="text-red-600 text-[14px] font-serif">
                 {isError && "something wrong !!"}
