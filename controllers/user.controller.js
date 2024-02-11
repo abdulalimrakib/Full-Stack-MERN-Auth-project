@@ -3,10 +3,13 @@ const User = require("../models/user.model");
 
 const updateUser = async (req, res, next) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
+    console.log(req.user.id);
+    console.log(req?.params);
     if (req.user.id !== req.params.id)
-      return res.status(397).json("Login your account first");
+      return res.status(390).json("Login your account first");
     if (req.body.password) {
+      console.log(req.body.password);
       req.body.password = bcrypt.hashSync(req.body.password, 10);
     }
 

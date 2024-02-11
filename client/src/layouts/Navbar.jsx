@@ -24,7 +24,7 @@ const Navbar = () => {
                     <li><Link to="/about" className="font-medium" href="">About</Link></li>
                     {
                         userData ? (
-                            <Link to="/profile"><img src={userData?.data?.userData?.image} className="w-7 h-7 rounded-full object-cover" alt="" /></Link>
+                            <Link to="/profile"><img src={userData?.data?.userData?.image || userData?.data?.image} className="w-7 h-7 rounded-full object-cover" alt="" /></Link>
                         ) : (
                             <li><Link to="/login" className="font-medium" href="">Login</Link></li>
                         )
