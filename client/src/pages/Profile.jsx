@@ -20,6 +20,9 @@ import {
 
 const Profile = () => {
     const { isLoading, userData, isError } = useSelector((state) => state.user);
+    setTimeout(() =>{
+        dispatch(signInFailure(false))
+    }, 10000)
     const [formData, setFromData] = useState({});
     const [isUpdated, setIsUpdated] = useState(false);
     const [imageFile, setImageFile] = useState();

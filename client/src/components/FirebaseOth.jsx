@@ -29,9 +29,9 @@ const FirebaseOth = () => {
     }
 
     return (
-        <button type='button' onClick={handleGoogleAuth} className='flex justify-center items-center gap-3 p-3 border-2 rounded-lg hover:bg-gray-200'>
-            <img src="../../public/Google__G__logo.svg.png" className='w-[25px] h-[25px]' alt="" />
-            <span className='font-semibold text-[18px]'>Sign in with Google</span>
+        <button type='button' onClick={handleGoogleAuth} className='flex justify-center items-center gap-3 p-2 md:p-3 border-2 rounded-lg hover:bg-gray-200'>
+            <img src="../../public/Google__G__logo.svg.png" className='md:w-[25px] h-[18px] md:h-[25px]' alt="" />
+            <span className='font-semibold text-[14px] md:text-[18px]'>Sign in with Google</span>
         </button>
     )
 }
