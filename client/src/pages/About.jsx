@@ -2,8 +2,12 @@
 
 const About = () => {
   return (
-    <div className="flex justify-center p-4 md:p-10">
-      <p>
+    <div className="flex flex-col justify-center p-4 md:p-10">
+      <div className="text-center py-2 md:py-3">
+        <h2 className="text-xl md:text-3xl font-bold">About This Project</h2>
+      </div>
+      <hr />
+      <p className="py-2 md:py-4">
         This project appears to be a web application built using the MERN stack (MongoDB, Express.js, React.js, Node.js). Here's an overview of the project structure and functionality based on the provided code: <br /><br />
 
         <b>Frontend (React.js):</b><br />

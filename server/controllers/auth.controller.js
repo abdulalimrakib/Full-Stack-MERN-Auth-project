@@ -98,10 +98,10 @@ const postDataFromGoogle = async (req, res, next) => {
         const newUser = new User({ username, email, password: hash, image });
         await newUser.save();
 
-        const token = jwt.sign({ id: existUser._id }, process.env.SECRET_KEY, {
+        const token = jwt.sign({ id: newUser._id }, process.env.SECRET_KEY, {
           expiresIn: "2 days",
         });
-        const { password: hashPassword, ...restData } = existUser._doc;
+        const { password: hashPassword, ...restData } = newUser._doc;
         res
           .cookie("access_token", token, {
             HttpOnly: true,

@@ -3,7 +3,7 @@ import { FiMenu } from "react-icons/fi";
 import { MdClose } from "react-icons/md";
 import { motion } from "framer-motion"
 import { fadeIn } from "../variants";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 
@@ -29,16 +29,10 @@ const Navbar = () => {
                             <li><Link to="/login" className="font-medium" href="">Login</Link></li>
                         )
                     }
-                    {/* <li><a href="">logo1</a></li>
-                    <li><a href="">logo2</a></li> */}
                 </ul>
 
                 <div className="md:hidden">
                     <div className="flex items-center gap-5">
-                        {/* <ul className="flex gap-5">
-                            <li><a href="">logo1</a></li>
-                            <li><a href="">logo2</a></li>
-                        </ul> */}
                         {
                             isMenuCliked ? (<MdClose onClick={() => setIsMenuCliked(false)} />) : (<FiMenu onClick={() => setIsMenuCliked(true)} />)
                         }
@@ -47,9 +41,18 @@ const Navbar = () => {
             </div>
             <div className={`container ${isMenuCliked ? "block" : "hidden"}`}>
                 <ul>
-                    <motion.li variants={fadeIn('down', 0.03)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/" className="font-medium" href="">Home</Link></motion.li>
-                    <motion.li variants={fadeIn('down', 0.06)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/about" className="font-medium" href="">About</Link></motion.li>
-                    <motion.li variants={fadeIn('down', 0.09)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/login" className="font-medium" href="">Login</Link></motion.li>
+                    <motion.li variants={fadeIn('down', 0.03)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/" className="font-medium" href="" onClick={() => isMenuCliked(false)}>Home</Link></motion.li>
+                    <motion.li variants={fadeIn('down', 0.06)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/about" className="font-medium" href="" onClick={() => isMenuCliked(false)}>About</Link></motion.li>
+                    {
+                        userData ? (
+                            <motion.li variants={fadeIn('down', 0.09)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}>
+                                <Link to="/profile" className="font-medium" onClick={() => isMenuCliked(false)}>Profile</Link>
+                            </motion.li>
+                        ) : (
+                            <motion.li variants={fadeIn('down', 0.09)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/login" className="font-medium" href="" onClick={() => isMenuCliked(false)}>Login</Link></motion.li>
+                        )
+                    }
+                    {/* <motion.li variants={fadeIn('down', 0.09)} initial="hidden" animate={isMenuCliked ? "show" : "hidden"}><Link to="/login" className="font-medium" href="">Login</Link></motion.li> */}
                 </ul>
             </div>
         </div>

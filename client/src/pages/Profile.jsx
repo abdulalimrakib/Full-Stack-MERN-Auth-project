@@ -9,10 +9,10 @@ import {
 import { app } from "../fireBaseConfig";
 import axios from "axios";
 import {
+    signInFailure,
     updateStart,
     updateSuccessful,
     updateFailure,
-    deleteStart,
     deleteSuccessful,
     deleteFailure,
     userSignOut,
@@ -20,12 +20,15 @@ import {
 
 const Profile = () => {
     const { isLoading, userData, isError } = useSelector((state) => state.user);
-    setTimeout(() =>{
-        dispatch(signInFailure(false))
-    }, 10000)
     const [formData, setFromData] = useState({});
     const [isUpdated, setIsUpdated] = useState(false);
     const [imageFile, setImageFile] = useState();
+    if(isError || isUpdated){
+        setTimeout(() =>{
+            dispatch(signInFailure(false))
+            setIsUpdated(false)
+        }, 5000)
+    }
 
     const [imagePercentage, setImagePercentage] = useState(0);
     const [imageError, setImageError] = useState(false);
@@ -79,7 +82,6 @@ const Profile = () => {
                     }
                 )
                 .then((res) => {
-                    console.log(res.data);
                     if (res?.data?.success === false) {
                         return dispatch(updateFailure(res));
                     } else {
@@ -137,7 +139,7 @@ const Profile = () => {
                         userData?.data?.userData?.image ||
                         userData?.data?.image
                     }
-                    className=" rounded-full w-28 h-28 object-cover self-center cursor-pointer"
+                    className=" rounded-full w-28 h-28 object-cover self-center cursor-pointer outline outline-teal-100"
                     alt="image"
                     onClick={() => imgRef.current.click()}
                 />
@@ -157,7 +159,7 @@ const Profile = () => {
                 <input
                     type="text"
                     placeholder="User Name"
-                    className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
+                    className="p-2 md:p-3 text-black text-[14px] md:text-[18px] w-full rounded-lg border border-teal-400 focus:outline-none focus:ring-2"
                     name="username"
                     defaultValue={
                         userData?.data?.userData?.username || userData?.data?.username
@@ -167,7 +169,7 @@ const Profile = () => {
                 <input
                     type="email"
                     placeholder="Email"
-                    className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
+                    className="p-2 md:p-3 text-black text-[14px] md:text-[18px] w-full rounded-lg border border-teal-400 focus:outline-none focus:ring-2"
                     name="email"
                     defaultValue={
                         userData?.data?.userData?.email || userData?.data?.email
@@ -178,10 +180,10 @@ const Profile = () => {
                     type="password"
                     placeholder="Password"
                     name="password"
-                    className="p-3 bg-slate-300 text-black text-[18px] w-full rounded-lg"
+                    className="p-2 md:p-3 text-black text-[14px] md:text-[18px] w-full rounded-lg border border-teal-400 focus:outline-none focus:ring-2"
                     onChange={handleChange}
                 />
-                <button className="uppercase border p-3 text-black text-[18px] w-full rounded-lg bg-teal-600 hover:bg-opacity-80 font-semibold">
+                <button className="p-2 md:p-3 text-black font-semibold text-[14px] md:text-[18px] w-full rounded-lg border bg-teal-400 focus:outline-none focus:ring-2">
                     {isLoading ? "Loading ..." : "Update"}
                 </button>
             </form>
@@ -199,10 +201,10 @@ const Profile = () => {
                     Sign Out
                 </span>
             </div>
-            <p className="text-red-600 text-[14px] font-serif">
+            <p className="text-red-600 text-[12px] md:text-[14px] font-serif">
                 {isError && "something wrong !!"}
             </p>
-            <p className="text-green-600 text-[14px] font-serif">
+            <p className="text-green-600 text-[12px] md:text-[14px] font-serif">
                 {isUpdated && "Updated successfully"}
             </p>
         </div>
