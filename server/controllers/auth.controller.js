@@ -75,7 +75,6 @@ const postDataFromGoogle = async (req, res, next) => {
   try {
     const { username, email, image } = req.body;
     const existUser = await User.findOne({ email });
-    console.log(existUser);
 
     if (existUser) {
       const token = jwt.sign({ id: existUser._id }, process.env.SECRET_KEY, {
