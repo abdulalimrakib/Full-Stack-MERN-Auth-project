@@ -62,7 +62,7 @@ const postLogin = async (req, res, next) => {
       expiresIn: "2 days",
     });
     const { password: hashPassword, ...restData } = existUser._doc;
-    res.cookie("access_token", token).status(200).json({
+    res.cookie("access_token", token, {path: "/"}).status(200).json({
       success: true,
       userData: restData,
     });
@@ -83,6 +83,7 @@ const postDataFromGoogle = async (req, res, next) => {
       const { password: hashPassword, ...restData } = existUser._doc;
       res
         .cookie("access_token", token, {
+          path: "/",
           HttpOnly: true,
         })
         .status(200)
@@ -103,6 +104,7 @@ const postDataFromGoogle = async (req, res, next) => {
         const { password: hashPassword, ...restData } = newUser._doc;
         res
           .cookie("access_token", token, {
+            path: "/",
             HttpOnly: true,
           })
           .status(200)
